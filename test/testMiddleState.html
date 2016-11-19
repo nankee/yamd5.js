@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body  {
+    font: 13px mono;
+    }
+.good {
+    color: green;
+    }
+.bad {
+    color: red;
+    }
+</style>
+</head>
+<body>
+<script src="../yamd5.js"></script>
+<script>
+    var tests = [
+
+        // from Appendix 5 of http://www.ietf.org/rfc/rfc1321.txt
+         'abc',
+         'message digest',
+         'abcdefghijklmnopqrstuvwxyz',
+         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+         '12345678901234567890123456789012345678901234567890123456789012345678901234567890',
+
+        // Unicode strings taken from http://en.wikipedia.org/wiki/List_of_pangrams
+        // Then I ran them through md5sum
+         'Voix ambiguë d\'un cœur qui au zéphyr préfère les jattes de kiwis',
+         'Жълтата дюля беше щастлива, че пухът, който цъфна, замръзна като гьон',
+         'Hyvän lorun sangen pieneksi hyödyksi jäi suomen kirjaimet',
+         'Ταχίστη αλώπηξ βαφής ψημένη γη, δρασκελίζει υπέρ νωθρού κυνός',
+         '色は匂へど 散りぬるを 我が世誰ぞ 常ならむ 有為の奥山 今日越えて 浅き夢見じ 酔ひもせず',
+         'นายสังฆภัณฑ์ เฮงพิทักษ์ฝั่ง ผู้เฒ่าซึ่งมีอาชีพเป็นฅนขายฃวด ถูกตำรวจปฏิบัติการจับฟ้องศาล ฐานลักนาฬิกาคุณหญิงฉัตรชฎา ฌานสมาธิ'
+    ];
+
+
+    var templateSuccess = '<span class="good">Success: "{{hash}}" === md5("{{data}}") === yamd5.setState(middleState).end()</span><br>';
+    var templateFailure = '<span class="bad">Failure: "{{hash}}" === md5("{{data}}") !== yamd5.setState(middleState).end()</span><br>';
+
+    var yamd5 = new YaMD5;
+    
+    var middleState;
+
+    for(var i=0,len=tests.length; i<len; i++){
+        test(tests[i]);
+    }
+
+    function test(input){
+        var testStr = input;
+        for(var i=0,len=testStr.length; i<len; i++){
+            if (i !== 0){
+                yamd5.setState(middleState);
+            }else{
+                yamd5.start();
+            }
+            middleState = yamd5.appendStr(testStr.charAt(i)).getState();
+        }
+
+        var template;
+        if(yamd5.setState(middleState).end() === YaMD5.hashStr(testStr)){
+            template = templateSuccess;
+        }else{
+            template = templateFailure;
+        }
+        document.write(template.replace('{{data}}', testStr).replace('{{hash}}', YaMD5.hashStr(testStr)));
+    }
+    
+
+</script>
+
+
+
+</body>
+</html>
