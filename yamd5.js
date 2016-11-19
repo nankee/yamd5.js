@@ -336,31 +336,24 @@ THE SOFTWARE.
     };
 
     MD5.prototype.getState = function() {
-
         var middleState = {
             state: this._state.buffer.slice(0),
             dataLength: this._dataLength,
             bufferLength: this._bufferLength
         };
-
         if(this._bufferLength){
             middleState.buffer = this._buffer.slice(0);
         }
-
         return middleState;
-       
     };
 
     MD5.prototype.setState = function(state) {
-
         this._state.set(new Int32Array(state.state));
         this._dataLength = state.dataLength;
         this._bufferLength = state.bufferLength;
-
         if(state.bufferLength){
             this._buffer32.set(new Uint32Array(state.buffer));
         }
-        
         return this;
     };
 
