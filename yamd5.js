@@ -341,7 +341,7 @@ THE SOFTWARE.
             dataLength: this._dataLength,
             bufferLength: this._bufferLength
         };
-        if(this._bufferLength){
+        if (this._bufferLength) {
             middleState.buffer = this._buffer.slice(0);
         }
         return middleState;
@@ -351,7 +351,7 @@ THE SOFTWARE.
         this._state.set(new Int32Array(state.state));
         this._dataLength = state.dataLength;
         this._bufferLength = state.bufferLength;
-        if(state.bufferLength){
+        if (state.bufferLength) {
             this._buffer32.set(new Uint32Array(state.buffer));
         }
         return this;
